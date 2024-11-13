@@ -1,76 +1,70 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
+
 function App() {
   const [allData, setAllData] = useState([])
+  const [score, setScore] = useState(0)
+  const [bestScore, setBestScore] = useState(0)
+  const [temp, setTemp] = useState([])
+  const [cards, setCards] = useState([])
 
   useEffect(() => {
-    const apiRequest = async () => {
-      const response = await fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php")
+    fetch('https://db.ygoprodeck.com/api/v7/cardinfo.php')
+      .then(response => response.json())
+      .then(data => setAllData(data.data));
+  }, []);
 
-      const data = await response.json()
-      setAllData(data.data)
+  useEffect(() => {
+    const cardsId = [89631139, 28279543, 46986414, 12206212, 10000000, 10000020, 10000010, 71625222, 70781052, 74677422]
+
+    const filteredCards = allData.filter(card => cardsId.map(item => item).includes(card.id))
+
+    setCards(filteredCards)
+  }, [allData])
+
+  const handleGame = e => {
+    cards.sort(() => Math.random() - .5)
+    
+    setTemp(prev => {
+      return [...prev, e.target.id]
+    })
+
+    if (temp.includes(e.target.id)) {
+      if (score < bestScore) {
+        setScore(0)
+      } else {
+        setBestScore(score)
+        setScore(0)
+        setTemp([])
+      }
+    } else {
+      setScore(prev => prev + 1)
     }
-
-    apiRequest()
-  }, [])
-
-  console.log(allData)
+  }
+  
 
   return (
     <>
       <header className="header">
         <div className="header-container">
           <div className="title">
-            <h1>Yu-Gi-Oh! Memory Game</h1>
+            <img src="../public/images/logo.png" alt="" />
           </div>
           <div className="score-container">
-            <span>Score: 0</span>
-            <span>Best Score: 0</span>
+            <span>Score: {score}</span>
+            <span>Best Score: {bestScore}</span>
           </div>
         </div>
       </header>
       <main className="cards-grid">
-        <div className="card">
-          <img src="./images/blue-eyes-white-dragon-89631139.jpg" alt="" />
-          <span>Blue-Eyes White Dragon</span>
-        </div>
-        <div className="card">
-          <img src="./images/curse-of-dragon-28279543.jpg" alt="" />
-          <span>Curse of Dragon</span>
-        </div>
-        <div className="card">
-          <img src="./images/dark-magician-46986414.jpg" alt="" />
-          <span>Dark Magician</span>
-        </div>
-        <div className="card">
-          <img src="./images/harpie-lady-sisters-12206212.jpg" alt="" />
-          <span>Harpie Lady Sisters</span>
-        </div>
-        <div className="card">
-          <img src="./images/obelisk-the-tormentor-10000000.jpg" alt="" />
-          <span>Obelisk the Tormentor</span>
-        </div>
-        <div className="card">
-          <img src="./images/slifer-the-sky-dragon-10000020.jpg" alt="" />
-          <span>Slifer the Sky Dragon</span>
-        </div>
-        <div className="card">
-          <img src="./images/the-winged-dragon-of-ra-10000010.jpg" alt="" />
-          <span>The Winged Dragon of Ra</span>
-        </div>
-        <div className="card">
-          <img src="./images/time-wizard-71625222.jpg" alt="" />
-          <span>Time Wizard</span>
-        </div>
-        <div className="card">
-          <img src="./images/summoned-skull-70781052.jpg" alt="" />
-          <span>Summoned Skull</span>
-        </div>
-        <div className="card">
-          <img src="./images/red-eyes-black-dragon-74677422.jpg" alt="" />
-          <span>Red-Eyes Black Dragon</span>
-        </div>
+        {cards.map(card => {
+          return (
+            <div key={card.id} className="card">
+              <img id={card.id} src={`../public/images/${card.id}.jpg`} alt={card.name} onClick={handleGame}/>
+            </div>
+          )
+        })}
       </main>
     </>
   )
