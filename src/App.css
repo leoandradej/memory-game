@@ -4,7 +4,7 @@
 
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Cinzel', serif;
   font-size: 1.3rem;
   font-weight: 500;
   background: url(../public/images/background.jpg);
@@ -18,8 +18,53 @@ body {
   padding: 3rem 10rem;
 }
 
+h2 {
+  margin: 0;
+}
+
 img {
   max-width: 100%;
+}
+
+p {
+  font-weight: 600;
+}
+
+.modal {
+  padding: 1rem;
+  max-width: 30%;
+  text-align: center;
+  background-color: #D0D9DF;
+  border: .5rem solid #FCFAFA;
+  border-radius: 1rem;
+  box-shadow: 0 0 1em rgba(0, 0, 0, .3);
+}
+
+.btn {
+  font-family: inherit;
+  font-weight: 600;
+  outline: none;
+  border: none;
+  background-color: #FCFAFA;
+  transition: 200ms ease-in-out;
+}
+
+.btn:hover {
+  cursor: pointer;
+  color: #FCFAFA;
+  background-color: #A4B8C4;
+}
+
+.info-btn {
+  font-size: 1.25rem;
+  padding: .5rem 1rem;
+  border: .2rem solid #A4B8C4;
+  border-radius: 50%;
+}
+
+.close-btn {
+  padding: 1rem;
+  border-radius: .5rem;
 }
 
 .header-container {
@@ -31,6 +76,9 @@ img {
 
 .title {
   width: 20%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .score-container {
@@ -38,8 +86,11 @@ img {
   flex-direction: column;
   gap: .5rem;
   padding: 1rem;
-  background-color: rgba(254, 250, 220, .6);
-  border-radius: 1rem;
+  border: .5rem solid #FCFAFA;
+  background-color: #D0D9DF;
+  border-radius: .5rem;
+  font-weight: 600;
+  box-shadow: 0 0 1em rgba(0, 0, 0, .3);
 }
 
 .cards-grid {
@@ -49,20 +100,35 @@ img {
   gap: 1rem;
 }
 
-.card{
+.wrapper {
   width: 12rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .5rem;
-  font-size: 1rem;
-  text-align: center;
-  padding: 1rem;
-  background-color: rgba(254, 250, 220, .6);
-  border-radius: 1rem;
+  height: 18rem;
 }
 
-.card img {
-  width: 10rem;
+.wrapper > .card.flipped {
+  transform: rotateY(180deg);
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 1500ms;
+  transform-style: preserve-3d;
   cursor: pointer;
+}
+
+.front,
+.back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: .5rem;
+  backface-visibility: hidden;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.back {
+  transform: rotateY(180deg);
 }
