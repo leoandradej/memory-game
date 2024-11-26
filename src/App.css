@@ -7,7 +7,7 @@ body {
   font-family: 'Cinzel', serif;
   font-size: 1.3rem;
   font-weight: 500;
-  background: url(../public/images/background.jpg);
+  background: url("./images/background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }

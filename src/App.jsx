@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import Header from './components/Header'
+import Modal from './components/Modal'
 
 
 function App() {
   const [allData, setAllData] = useState([])
+  const [cards, setCards] = useState([])
+  const [clickedCards, setClickedCards] = useState([])
+  const [isFlipped, setIsFlipped] = useState(false)
   const [score, setScore] = useState(0)
   const [bestScore, setBestScore] = useState(0)
-  const [temp, setTemp] = useState([])
-  const [cards, setCards] = useState([])
-  const [isFlipped, setIsFlipped] = useState(false)
 
   useEffect(() => {
     fetch('https://db.ygoprodeck.com/api/v7/cardinfo.php')
@@ -50,7 +52,7 @@ function App() {
     setCards(array)
   }
 
-  const handleGame = e => {
+  const handleCardClick = e => {
     setIsFlipped(true)
 
     setTimeout(() => {
@@ -61,17 +63,17 @@ function App() {
       setIsFlipped(false)
     }, 1300)
     
-    setTemp(prev => {
+    setClickedCards(prev => {
       return [...prev, e.target.id]
     })
 
-    if (temp.includes(e.target.id)) {
+    if (clickedCards.includes(e.target.id)) {
       if (score < bestScore) {
         setScore(0)
       } else {
         setBestScore(score)
         setScore(0)
-        setTemp([])
+        setClickedCards([])
       }
     } else {
       setScore(prev => prev + 1)
@@ -81,35 +83,20 @@ function App() {
 
   return (
     <>
-      <header className="header">
-        <div className="header-container">
-          <div className="title">
-            <img src="../public/images/logo.png" alt="logo" />
-            <button className='btn info-btn' onClick={() => openModal()}>i</button>
-          </div>
-          <div className="score-container">
-            <span>Score: {score}</span>
-            <span>Best Score: {bestScore}</span>
-          </div>
-        </div>
-      </header>
+      <Header onClick={openModal} score={score} bestScore={bestScore}/>
       <main className="cards-grid">
         {cards.map(card => {
           return (
             <div key={card.id} className="wrapper">
               <div className={isFlipped ? 'card flipped' : 'card'}>
-                <img id={card.id} className="front" src={`../public/images/${card.id}.jpg`} alt={card.name} onClick={handleGame}/>
-                <img className='back' src="../public/images/back.png" alt="" />
+                <img id={card.id} className="front" src={`./images/${card.id}.jpg`} alt={card.name} onClick={handleCardClick}/>
+                <img className='back' src="./images/back.png" alt="Card Back" />
               </div>
             </div>
           )
         })}
       </main>
-      <dialog id="modal" className="modal">
-        <h2>Hey duelist,</h2>
-        <p>The goal of the game is to click each card just once. Good luck and choose wisely!</p>
-        <button className='btn close-btn' onClick={() => closeModal()}>OK</button>
-      </dialog>
+      <Modal onClick={closeModal}/>
     </>
   )
 }
